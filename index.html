@@ -10,11 +10,25 @@
             body{
                 margin-top: 30px;
             }
+            #messageArea{
+                display: none;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="row">
+            <div id="userFormArea"class="row">
+                    <div class="col-md-6">
+                            <form id="userForm">
+                                <div class="form-group">
+                                    <label>Enter Username</label>
+                                    <input class="form-control" id="username"><br>
+                                    <input type="submit" class="btn btn-primary" value="Sign In">
+                                </div>
+                            </form>
+                        </div>
+            </div><!--end of userLoginForm -->
+            <div id="messageArea"class="row">
                 <div class="col-md-4">
                     <div class="well">
                         <h3>Online Users</h3>
@@ -41,12 +55,42 @@
                 var $messageForm = $('#messageForm');
                 var $message = $('#message');
                 var $chat = $('#chat')
+                var $userForm = $('#userForm');
+                var $userFormArea = $('#userFormArea');
+                var $users = $('#users');
+                var $username = $('#username')
+                var $messageArea = $('#messageArea');
+                // post chat
                 $messageForm.submit((event)=>{
                     event.preventDefault();
                     socket.emit('send message', $message.val());
+                    $message.val('')
                 });
-                socket.on('new message', (data)=>($chat.append('<div class="well">'+data.msg+'</div>')));
+                socket.on('new message', (data)=>($chat.append('<div class="well">'+'<strong>'+data.username+': </strong>'+data.msg+'</div>')));
+                // user login
+                $userForm.submit((event)=>{
+                    event.preventDefault();
+                    socket.emit('new user', $username.val(), (username)=>{
+                        if(username){
+                           $userForm.hide();
+                           $messageArea.show()
+                        }
+                    });
+                    $username.val('')
+                });
+                socket.on('get users', (usersList)=>{
+                    var usersHtml = '';
+                    if (usersList){
+                        for(user=0; user<usersList.length;user++){
+                           usersHtml += '<li class="list-group-item">'+ usersList[user]+'</li>'
+                        };
+                        $users.html(usersHtml);
+                    }else{
+                        pass
+                    }
+                });
             });
+
         </script>
     </body>
 </html>
