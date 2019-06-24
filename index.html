@@ -64,7 +64,7 @@
                 $messageForm.submit((event)=>{
                     event.preventDefault();
                     socket.emit('send message', $message.val());
-                    $message.val('')
+                    $message.val(' ')
                 });
                 socket.on('new message', (data)=>($chat.append('<div class="well">'+'<strong>'+data.username+': </strong>'+data.msg+'</div>')));
                 // user login
