@@ -2,7 +2,7 @@
 ### Quick Set-up
 ***This a simple node js application which impliment a basic chat server***
 
-###Technologies used:
+##Technologies used:
 ***node***
 ***Jquey***
 ***Socket.io***
